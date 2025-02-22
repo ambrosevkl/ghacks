@@ -1,6 +1,5 @@
 import numpy as np
 
-
 # Define the path to your text file
 file_path = "data1.txt"  # Replace with the actual path to your file
 
@@ -32,3 +31,14 @@ for values in posa_values:
 
 np.array(List_2D_posa)
 print(List_2D_posa)
+
+'''
+lattitude = [row[0] for row in List_2D_posa]
+longitude = [row[1] for row in List_2D_posa]
+
+
+# Print the result
+print("Lattitude:", lattitude)
+print("=" * 50)  # Prints 50 dashes
+print("Lattitude:", longitude)
+'''
