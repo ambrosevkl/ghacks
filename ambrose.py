@@ -50,6 +50,13 @@ print("POSA Values (2D List):")
 for values in posa_values:
     List_2D_posa.append(values)
 
+# Example usage
+coordinates = [
+    [51.0795, -114.1315],
+    [51.0800, -114.1300],
+    [51.0810, -114.1285],
+    [51.0820, -114.1270]
+]
 np.array(List_2D_posa)
 print(List_2D_posa)
 
