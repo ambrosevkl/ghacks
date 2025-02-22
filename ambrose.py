@@ -1,4 +1,5 @@
 import webbrowser
+from Hackathon import List_2D_posa
 
 def plot_google_maps_path(coordinates):
     """
@@ -61,4 +62,3 @@ np.array(List_2D_posa)
 print(List_2D_posa)
 
 plot_google_maps_path(List_2D_posa)
-
