@@ -21,7 +21,6 @@ def plot_google_maps_path(coordinates):
     # Construct full URL
     map_url = f"{base_url}{path}"
 
-    print("Opening Google Maps with path:", map_url)
     webbrowser.open(map_url)
 
 
