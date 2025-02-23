@@ -180,7 +180,7 @@ def plot(cartesian, velocities):
 Program_in_use = True
 
 print("Welcome to our GHacks Data visualization tool, please type in the filename containing PDPPOSA and PDPVELA data")
-file_path = input("Filename(.txt Included) \n")
+file_path = input("Filename(.txt Included) (Filename in this case is \"Glide.txt\" \n")
 while Program_in_use:
     data_list = readfile(file_path)
     List_2D_Lat_long = data_list[0]
