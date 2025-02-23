@@ -91,39 +91,6 @@ def plot(cartesian, velocities):
     y = [point[1] for point in cartesian]
     z = [point[2] for point in cartesian]
 
-    # Apply Savitzky-Golay filter to smooth the data
-    window_length = 15  # Must be odd; adjust based on your data
-    polyorder = 3       # Polynomial order; typically 2-5
-
-    x_smooth = savgol_filter(x, window_length, polyorder)
-    y_smooth = savgol_filter(y, window_length, polyorder)
-    z_smooth = savgol_filter(z, window_length, polyorder)
-
-    # Create a 3D plot
-    fig = plt.figure(figsize=(12, 8))
-    ax = fig.add_subplot(111, projection='3d')
-
-    # Plot raw data (original points)
-    ax.scatter(x, y, z, c='r', s=10, alpha=0.3, label='Raw Points')
-
-    # Plot raw trajectory (original line)
-    ax.plot(x, y, z, 'r-', linewidth=1, alpha=0.3, label='Raw Path')
-
-    # Plot smoothed trajectory
-    ax.plot(x_smooth, y_smooth, z_smooth, 'b-', linewidth=2, label='Smoothed Path')
-
-    # Customize the plot
-    ax.set_xlabel('X Axis', fontsize=12)
-    ax.set_ylabel('Y Axis', fontsize=12)
-    ax.set_zlabel('Z Axis', fontsize=12)
-    ax.set_title('3D Trajectory with Savitzky-Golay Smoothing', fontsize=14)
-    ax.legend()
-    ax.grid(True)
-
-    plt.savefig("SavitzyGolay.png")
-    plt.show()
-
-
     # Create a 3D plot
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111, projection='3d')
@@ -143,6 +110,33 @@ def plot(cartesian, velocities):
     # Show the plot
     plt.savefig("Raw_Data.png")
     plt.show()
+    
+    # Apply Savitzky-Golay filter to smooth the data
+    window_length = 21  # Must be odd; adjust based on your data
+    polyorder = 3       # Polynomial order; typically 2-5
+
+    x_smooth = savgol_filter(x, window_length, polyorder)
+    y_smooth = savgol_filter(y, window_length, polyorder)
+    z_smooth = savgol_filter(z, window_length, polyorder)
+
+    # Create a 3D plot
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plot smoothed trajectory
+    ax.plot(x_smooth, y_smooth, z_smooth, 'b-', linewidth=2, label='Post-Processed Path')
+
+    # Customize the plot
+    ax.set_xlabel('X Axis', fontsize=12)
+    ax.set_ylabel('Y Axis', fontsize=12)
+    ax.set_zlabel('Z Axis', fontsize=12)
+    ax.set_title('3D Trajectory with Savitzky-Golay Smoothing', fontsize=14)
+    ax.legend()
+    ax.grid(True)
+
+    plt.savefig("SavitzyGolay.png")
+    plt.show()
+
 
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111, projection='3d')
@@ -175,17 +169,17 @@ def plot(cartesian, velocities):
 
 
 
-
 Program_in_use = True
 
 print("Welcome to our GHacks Data visualization tool, please type in the filename containing PDPPOSA and PDPVELA data")
-file_path = input("Filename(.txt Included) (Filename in this case is \"Glide.txt\" \n")
+file_path = input("Filename(.txt Included) Filename in this case is \"Glide.txt\" \n")
 while Program_in_use:
     data_list = readfile(file_path)
     List_2D_Lat_long = data_list[0]
     List_2D_posa = data_list[1]
     velocities = data_list[2]
 
+    print("")
     print("Please Select an Option to continue")
     print("1.) Google Maps Plot Visualization \n2.) 3D plots including Raw, Processed, and velocity route map\n0.) for Exiting Program \n")
     print("=" * 80)
@@ -206,6 +200,6 @@ while Program_in_use:
         Program_in_use = False
         print("Thank you for using our program")
     else:
-        print("invalid input please try again")
+        print("Invalid input please try again")
 
 
