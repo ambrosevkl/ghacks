@@ -72,15 +72,14 @@ def readfile(file_path):
                 velocity_list.append(velocity)
 
 
-    # Print the extracted POSA values
+    #Contain the extracted POSA values
     for values in posa_values:
         List_2D_posa.append(values)
 
+    #Contain the extracted Latitude and Longitude Values from POSA
     List_2D_Lat_long = []
     for values in lat_long:
         List_2D_Lat_long.append(values)
-
-    np.array(List_2D_posa)
 
     return [List_2D_Lat_long, List_2D_posa, velocity_list]
 
@@ -266,3 +265,5 @@ while Program_in_use:
     else:
         # Handle invalid inputs
         print("Invalid input. Please try again.")
+
+
