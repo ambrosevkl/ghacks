@@ -3,7 +3,7 @@ import webbrowser
 from matplotlib.colors import Normalize
 from matplotlib.cm import ScalarMappable
 import matplotlib.pyplot as plt
-from scipy.signal import savgol_filter  # Import the filter
+from scipy.signal import savgol_filter  # Import the SavitzyGolay filter
 import math
 
 def plot_google_maps_path(coordinates):
