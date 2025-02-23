@@ -6,6 +6,34 @@ import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter  # Import the SavitzyGolay filter
 import math
 
+
+
+def checkfile(filename):
+    '''
+    Checks if a file exists and can be read successfully.
+
+    Parameters:
+        filename (str): The name of the file to check, including its extension (e.g., "Glide.txt").
+
+    Returns:
+        bool: 
+            - `True` if the file exists and is readable.
+            - `False` if the file does not exist or cannot be read.
+    '''
+
+    try:
+    #In the Case the file exists
+        data_list = readfile(file_path)
+        return True
+    
+    #In the Case the file does not exist
+    except FileNotFoundError:
+        print("File Not found, please restart the program")
+        return False
+
+
+
+
 def plot_google_maps_path(coordinates):
     """
     Opens a Google Maps directions URL in the default web browser using a list of coordinates.
@@ -217,18 +245,21 @@ def plot(cartesian, velocities):
 
 
 
-Program_in_use = True
+
 
 # Prompt user for the input file containing PDPPOSA and PDPVELA data
 print("Welcome to our GHacks Data Visualization Tool!")
 print("Please type in the filename containing PDPPOSA and PDPVELA data.")
 file_path = input("Filename (.txt included). Example: \"Glide.txt\" \n")
 
+# Read data from the specified file
+Program_in_use = checkfile(file_path)
+
 # Main program loop
 while Program_in_use:
-    # Read data from the specified file
-    data_list = readfile(file_path)
 
+    #Create the data using valid file
+    data_list = readfile(file_path)
     # Extract relevant lists from the data into global variables
     List_2D_Lat_long = data_list[0]  # Latitude and longitude data
     List_2D_posa = data_list[1]      # Full geodetic data (lat, long, altitude)
