@@ -8,11 +8,15 @@ import math
 
 def plot_google_maps_path(coordinates):
     """
-    Opens Google Maps in a web browser with a path plotted using given latitude and longitude coordinates.
+    Opens a Google Maps directions URL in the default web browser using a list of coordinates.
 
-    Args:
-        coordinates (list of lists): 2D list of [latitude, longitude] pairs.
+    Parameters:
+         A 2D list containing Latitude and Longitude values for each datapoint
+
+    Returns:
+        None: The function constructs a Google Maps URL and opens it in a web browser.
     """
+
     base_url = "https://www.google.com/maps/dir/"
 
     # Format coordinates into a path
@@ -27,6 +31,19 @@ def plot_google_maps_path(coordinates):
 
 
 def readfile(file_path):
+    """
+    Reads a file and extracts geodetic position data (latitude, longitude, altitude) and velocity values.
+
+    Parameters:
+        file_path (str): The path to the input file containing POSA and VELA data.
+
+    Returns:
+        list: A list containing three elements:
+            - List_2D_Lat_long (list of lists): A 2D list where each sublist contains [latitude, longitude].
+            - List_2D_posa (list of lists): A 2D list where each sublist contains [latitude, longitude, altitude].
+            - velocity_list (list of float): A list of velocity values.
+    """
+
     # Initialize empty lists to store the POSA and VELA values
     List_2D_posa = []
     posa_values = []  # 2D list for POSA values
@@ -71,6 +88,20 @@ def readfile(file_path):
 
 
 def geodicToCartesian(geodic_list): #geodic list contains latitude, longitude, and altitude
+    """
+    Converts geodetic coordinates (latitude, longitude, and altitude) to Cartesian coordinates (x, y, z).
+
+    Parameters:
+        geodic_list (list of float): A list containing three elements:
+            - geodic_list[0]: Latitude in degrees
+            - geodic_list[1]: Longitude in degrees
+            - geodic_list[2]: Altitude in meters
+
+    Returns:
+        list of float: A list [x, y, z] representing the Cartesian coordinates in meters.
+
+    """
+
     #Defining Constants
     rad = math.pi/180
     E = 0.006694
@@ -87,6 +118,24 @@ def geodicToCartesian(geodic_list): #geodic list contains latitude, longitude, a
 
 
 def plot(cartesian, velocities):
+    """
+    Generates three different 3D trajectory visualizations based on given Cartesian coordinates
+    and velocity values.
+
+    Parameters:
+        cartesian (list of tuples): A list of (x, y, z) coordinate tuples representing the trajectory.
+        velocities (list of float): A list of velocity values corresponding to each point in the trajectory.
+
+    The function produces and saves three plots:
+    1. A raw 3D trajectory plot displaying the original data points and path.
+    2. A smoothed 3D trajectory plot using the Savitzky-Golay filter for noise reduction.
+    3. A 3D scatter plot where points are color-coded based on velocity.
+
+    Each plot is displayed and saved as an image file:
+    - "Raw_Data.png"
+    - "SavitzyGolay.png"
+    - "Velocity_Colored_Plot.png"
+    """
     x = [point[0] for point in cartesian]
     y = [point[1] for point in cartesian]
     z = [point[2] for point in cartesian]
@@ -111,22 +160,22 @@ def plot(cartesian, velocities):
     plt.savefig("Raw_Data.png")
     plt.show()
     
-    # Apply Savitzky-Golay filter to smooth the data
-    window_length = 21  # Must be odd; adjust based on your data
-    polyorder = 3       # Polynomial order; typically 2-5
+    # Apply Savitzky-Golay filter to smoothen data
+    window_length = 21  
+    polyorder = 3       
 
     x_smooth = savgol_filter(x, window_length, polyorder)
     y_smooth = savgol_filter(y, window_length, polyorder)
     z_smooth = savgol_filter(z, window_length, polyorder)
 
-    # Create a 3D plot
+    # Create a 3D plot for Raw data
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111, projection='3d')
 
     # Plot smoothed trajectory
     ax.plot(x_smooth, y_smooth, z_smooth, 'b-', linewidth=2, label='Post-Processed Path')
 
-    # Customize the plot
+    # Customizing plot
     ax.set_xlabel('X Axis', fontsize=12)
     ax.set_ylabel('Y Axis', fontsize=12)
     ax.set_zlabel('Z Axis', fontsize=12)
@@ -144,14 +193,14 @@ def plot(cartesian, velocities):
     # Plot points colored by velocity
     scatter = ax.scatter(
         x, y, z,
-        c=velocities,  # Map velocity values to colors
-        cmap='plasma',  # Choose a colormap (e.g., 'plasma', 'coolwarm')
+        c=velocities,  # Mapping velocity values to colors
+        cmap='plasma',  #Choice of colourmap
         s=10,
         marker='o',
         label='Points'
     )
 
-    # Add colorbar
+    # Add colorbar legend for user
     norm = Normalize(vmin=min(velocities), vmax=max(velocities))
     cbar = plt.colorbar(ScalarMappable(norm=norm, cmap=scatter.cmap), ax=ax, shrink=0.5)
     cbar.set_label('Velocity', fontsize=12)
@@ -171,35 +220,49 @@ def plot(cartesian, velocities):
 
 Program_in_use = True
 
-print("Welcome to our GHacks Data visualization tool, please type in the filename containing PDPPOSA and PDPVELA data")
-file_path = input("Filename(.txt Included) Filename in this case is \"Glide.txt\" \n")
+# Prompt user for the input file containing PDPPOSA and PDPVELA data
+print("Welcome to our GHacks Data Visualization Tool!")
+print("Please type in the filename containing PDPPOSA and PDPVELA data.")
+file_path = input("Filename (.txt included). Example: \"Glide.txt\" \n")
+
+# Main program loop
 while Program_in_use:
+    # Read data from the specified file
     data_list = readfile(file_path)
-    List_2D_Lat_long = data_list[0]
-    List_2D_posa = data_list[1]
-    velocities = data_list[2]
 
-    print("")
-    print("Please Select an Option to continue")
-    print("1.) Google Maps Plot Visualization \n2.) 3D plots including Raw, Processed, and velocity route map\n0.) for Exiting Program \n")
+    # Extract relevant lists from the data into global variables
+    List_2D_Lat_long = data_list[0]  # Latitude and longitude data
+    List_2D_posa = data_list[1]      # Full geodetic data (lat, long, altitude)
+    velocities = data_list[2]        # Velocity data
+
+    # Display user options
+    print("\nPlease select an option to continue:")
+    print("1.) Google Maps Plot Visualization")
+    print("2.) 3D plots including Raw, Processed, and Velocity Route Map")
+    print("0.) Exit Program")
     print("=" * 80)
-    user_choice = (input(""))
-    if user_choice == '1':
-        plot_google_maps_path(List_2D_Lat_long)
-    elif user_choice == '2':
-        
-        cartesian = []
 
+    # Get user input
+    user_choice = input("")
+
+    if user_choice == '1':
+        # Generate and open Google Maps route visualization
+        plot_google_maps_path(List_2D_Lat_long)
+
+    elif user_choice == '2':
+        # Convert geodetic coordinates to Cartesian coordinates
+        cartesian = []
         for line in List_2D_posa:
             cartesian.append(geodicToCartesian(line))
         
+        # Generate 3D trajectory plots (raw, processed, and velocity-mapped)
         plot(cartesian, velocities)
 
-        
     elif user_choice == '0':
+        # Exit the program
         Program_in_use = False
-        print("Thank you for using our program")
+        print("Thank you for using our program!")
+
     else:
-        print("Invalid input please try again")
-
-
+        # Handle invalid inputs
+        print("Invalid input. Please try again.")
